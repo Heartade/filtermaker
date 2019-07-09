@@ -130,7 +130,7 @@ void main() {								        			\
             onLoad={this.updateImage}
           />
           <div className="toolbar-title">
-            <span style={{paddingLeft: "20px", paddingRight: "20px", fontSize: "1rem"}}>web-edit</span>
+            <span style={{paddingLeft: "20px", paddingRight: "20px", fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "auto"}}>web-edit</span>
           </div>
           <div className="toolbar-left">
             <button onClick={()=>{document.getElementById("fileInput").click();}}>LOAD</button>
@@ -166,6 +166,108 @@ void main() {								        			\
               RESET
             </button>
             <a style={{display: 'none'}} id="saveButton" download="save.jpg" target="_blank" href={this.state.saveurl}>SAVE</a>
+          </div>
+        </div>
+		<div className="editbar-up">
+          <div className="editbar-up-left">
+            <div style={{width: "160px"}} className="dropdown">
+              FILTER PRESET
+              <div className="dropdown-content">
+                <button onClick={()=>{
+                  this.uniforms.conv3x3.u_kernel.value = [-1,-1,-1,-1,8,-1,-1,-1,-1];
+                  this.uniforms.conv3x3.u_kernelWeight.value = 1;
+                  this.appendShader(this.vShader.conv3x3,this.fShader.conv3x3,this.uniforms.conv3x3)
+                }}>
+                  EDGE
+                </button>
+                <button onClick={()=>{
+                  this.uniforms.conv3x3.u_kernel.value = [0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1];
+                  this.uniforms.conv3x3.u_kernelWeight.value = 1;
+                  this.appendShader(this.vShader.conv3x3,this.fShader.conv3x3,this.uniforms.conv3x3)
+                }}>
+                  BLUR
+                </button>
+                <button onClick={()=>{
+                  var kern = [-1,0,0,0,-1,0,0,0,-1];
+                  var kern2 = [1,1,1];
+                  this.uniforms.matrix.u_matrix.value = kern;
+                  this.uniforms.matrix.u_mplus.value = kern2;
+                  this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                }}>
+                  NEGATIVE
+                </button>
+                <div className="dropdown-div">
+                  <button className="short" onClick={()=>{
+                    var val = parseFloat(document.getElementById("i_con").value);
+                    var kern = [1+(val*0.01),0,0,0,1+(val*0.01),0,0,0,1+(val*0.01)];
+                    var kern2 = [-val*0.005,-val*0.005,-val*0.005];
+                    this.uniforms.matrix.u_matrix.value = kern;
+                    this.uniforms.matrix.u_mplus.value = kern2;
+                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                  }}>
+                    CONTRAST
+                  </button>
+                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_con" defaultValue="10" type="text" />
+                  <div className="dropdown-span">%</div>
+                </div>
+                <div className="dropdown-div">
+                  <button className="short" onClick={()=>{
+                    var val = parseFloat(document.getElementById("i_sat").value);
+                    var kern = [1+(val*0.0067),-(val*0.0033),-(val*0.0033),-(val*0.0033),1+(val*0.0067),-(val*0.0033),-(val*0.0033),-(val*0.0033),1+(val*0.0067)];
+                    var kern2 = [0,0,0];
+                    this.uniforms.matrix.u_matrix.value = kern;
+                    this.uniforms.matrix.u_mplus.value = kern2;
+                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                  }}>
+                    SATURATION
+                  </button>
+                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_sat" defaultValue="10" type="text" />
+                  <div className="dropdown-span">%</div>
+                </div>
+				<div className="dropdown-div">
+                  <button className="short" onClick={()=>{
+                    var val = parseFloat(document.getElementById("i_bri").value);
+                    var kern = [1+(val*0.01),0,0,0,1+(val*0.01),0,0,0,1+(val*0.01)];
+                    var kern2 = [0,0,0];
+                    this.uniforms.matrix.u_matrix.value = kern;
+                    this.uniforms.matrix.u_mplus.value = kern2;
+                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                  }}>
+                    BRIGHTNESS
+                  </button>
+                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_bri" defaultValue="10" type="text" />
+                  <div className="dropdown-span">%</div>
+                </div>
+				<div className="dropdown-div">
+                  <button className="short" onClick={()=>{
+                    var val = parseFloat(document.getElementById("i_warm").value);
+                    var kern = [1+(val*0.005),0,-(val*0.005),0,1,0,val*0.005,0,1-(val*0.005)];
+                    var kern2 = [0,0,0];
+                    this.uniforms.matrix.u_matrix.value = kern;
+                    this.uniforms.matrix.u_mplus.value = kern2;
+                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                  }}>
+                    WARMTH
+                  </button>
+                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_warm" defaultValue="10" type="text" />
+                  <div className="dropdown-span">%</div>
+                </div>
+				<div className="dropdown-div">
+                  <button className="short" onClick={()=>{
+                    var val = parseFloat(document.getElementById("i_tint").value);
+                    var kern = [1+0.0033*val,-0.0033*val,0,0.0033*val,1-0.0067*val,0.0033*val,-0.0033*val,0,1+0.0033*val];
+                    var kern2 = [0,0,0];
+                    this.uniforms.matrix.u_matrix.value = kern;
+                    this.uniforms.matrix.u_mplus.value = kern2;
+                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
+                  }}>
+                    TINT
+                  </button>
+                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_tint" defaultValue="10" type="text" />
+                  <div className="dropdown-span">%</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="editbar">
@@ -279,106 +381,9 @@ void main() {								        			\
                 </button>
               </div>
             </div>
-            <div style={{width: "160px"}} className="dropdown">
-              FILTER PRESET
-              <div className="dropdown-content">
-                <button onClick={()=>{
-                  this.uniforms.conv3x3.u_kernel.value = [-1,-1,-1,-1,8,-1,-1,-1,-1];
-                  this.uniforms.conv3x3.u_kernelWeight.value = 1;
-                  this.appendShader(this.vShader.conv3x3,this.fShader.conv3x3,this.uniforms.conv3x3)
-                }}>
-                  EDGE
-                </button>
-                <button onClick={()=>{
-                  this.uniforms.conv3x3.u_kernel.value = [0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1];
-                  this.uniforms.conv3x3.u_kernelWeight.value = 1;
-                  this.appendShader(this.vShader.conv3x3,this.fShader.conv3x3,this.uniforms.conv3x3)
-                }}>
-                  BLUR
-                </button>
-                <button onClick={()=>{
-                  var kern = [-1,0,0,0,-1,0,0,0,-1];
-                  var kern2 = [1,1,1];
-                  this.uniforms.matrix.u_matrix.value = kern;
-                  this.uniforms.matrix.u_mplus.value = kern2;
-                  this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                }}>
-                  NEGATIVE
-                </button>
-                <div className="dropdown-div">
-                  <button className="short" onClick={()=>{
-                    var val = parseFloat(document.getElementById("i_con").value);
-                    var kern = [1+(val*0.01),0,0,0,1+(val*0.01),0,0,0,1+(val*0.01)];
-                    var kern2 = [-val*0.005,-val*0.005,-val*0.005];
-                    this.uniforms.matrix.u_matrix.value = kern;
-                    this.uniforms.matrix.u_mplus.value = kern2;
-                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                  }}>
-                    CONTRAST
-                  </button>
-                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_con" defaultValue="10" type="text" />
-                  <div className="dropdown-span">%</div>
-                </div>
-                <div className="dropdown-div">
-                  <button className="short" onClick={()=>{
-                    var val = parseFloat(document.getElementById("i_sat").value);
-                    var kern = [1+(val*0.0067),-(val*0.0033),-(val*0.0033),-(val*0.0033),1+(val*0.0067),-(val*0.0033),-(val*0.0033),-(val*0.0033),1+(val*0.0067)];
-                    var kern2 = [0,0,0];
-                    this.uniforms.matrix.u_matrix.value = kern;
-                    this.uniforms.matrix.u_mplus.value = kern2;
-                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                  }}>
-                    SATURATION
-                  </button>
-                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_sat" defaultValue="10" type="text" />
-                  <div className="dropdown-span">%</div>
-                </div>
-				<div className="dropdown-div">
-                  <button className="short" onClick={()=>{
-                    var val = parseFloat(document.getElementById("i_bri").value);
-                    var kern = [1+(val*0.01),0,0,0,1+(val*0.01),0,0,0,1+(val*0.01)];
-                    var kern2 = [0,0,0];
-                    this.uniforms.matrix.u_matrix.value = kern;
-                    this.uniforms.matrix.u_mplus.value = kern2;
-                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                  }}>
-                    BRIGHTNESS
-                  </button>
-                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_bri" defaultValue="10" type="text" />
-                  <div className="dropdown-span">%</div>
-                </div>
-				<div className="dropdown-div">
-                  <button className="short" onClick={()=>{
-                    var val = parseFloat(document.getElementById("i_warm").value);
-                    var kern = [1+(val*0.005),0,-(val*0.005),0,1,0,val*0.005,0,1-(val*0.005)];
-                    var kern2 = [0,0,0];
-                    this.uniforms.matrix.u_matrix.value = kern;
-                    this.uniforms.matrix.u_mplus.value = kern2;
-                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                  }}>
-                    WARMTH
-                  </button>
-                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_warm" defaultValue="10" type="text" />
-                  <div className="dropdown-span">%</div>
-                </div>
-				<div className="dropdown-div">
-                  <button className="short" onClick={()=>{
-                    var val = parseFloat(document.getElementById("i_tint").value);
-                    var kern = [1+0.0033*val,-0.0033*val,0,0.0033*val,1-0.0067*val,0.0033*val,-0.0033*val,0,1+0.0033*val];
-                    var kern2 = [0,0,0];
-                    this.uniforms.matrix.u_matrix.value = kern;
-                    this.uniforms.matrix.u_mplus.value = kern2;
-                    this.appendShader(this.vShader.conv3x3,this.fShader.matrix,this.uniforms.matrix);
-                  }}>
-                    TINT
-                  </button>
-                  <input style={{width: "20%", height: "100%"}} className = "singleinput" id="i_tint" defaultValue="10" type="text" />
-                  <div className="dropdown-span">%</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+		  </div>
+		</div>
+		
         <p style={{paddingTop: "64px", color: "white"}}>PROCESSED IMAGE</p>
         <Stage ref={(stage)=>{this.stage = stage}} id="processCanvas" style = {{maxWidth: "80vw", maxHeight: "80vh"}} width={this.state.width} height={this.state.height} options={{autoStart: false, sharedTicker: true, preserveDrawingBuffer: true, backgroundColor: 0xFFFFFF}}>
           <Sprite ref={(sprite)=>{this.sprite = sprite}} texture={this.state.texture} filters={this.state.shader}/>
@@ -412,9 +417,10 @@ void main() {								        			\
   updateImage(event,file) {
     var res = event.target.result;
     this.setState({imageDataURL:res, file:file});
+	console.log(res);
 	this.fullImage = new Image();
     this.fullImage.onload = ()=>{
-      this.sprite.texture = PIXI.Texture.fromImage(res);
+      this.sprite.texture = PIXI.Texture.from(this.fullImage);
 	  this.sprite.texture.on('update',()=>{this.stage._app.render()});
       this.setState({width: this.fullImage.width, height: this.fullImage.height}, ()=>{this.stage._app.render()});
       this.uniforms.conv3x3.u_textureSize.value = [this.fullImage.width,this.fullImage.height];

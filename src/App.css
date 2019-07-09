@@ -55,6 +55,7 @@ button:active {
 	padding: 6px 12px;
 	margin: 3px;
 	font-size: 0.6rem;
+    white-space: nowrap;
 }
 
 .dropdown:hover {
@@ -147,23 +148,32 @@ button:active {
 
 .toolbar {
 	height: 36px;
-	width: 100%;
 	min-width: 100vw;
 	position: fixed;
 	bottom: 0;
 	background-color: #888888;
 	display: flex;
 	flex-direction: row;
-	align-items: stretch;
+	align-items: left;
 }
 
 .editbar {
 	height: 36px;
-	width: 100%;
 	min-width: 100vw;
 	position: fixed;
 	bottom: 36px;
-	background-color: #CCCCCC;
+	background-color: #C0C0C0;
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+}
+
+.editbar-up {
+	height: 36px;
+	min-width: 100vw;
+	position: fixed;
+	bottom: 72px;
+	background-color: #DDDDDD;
 	display: flex;
 	flex-direction: row;
 	align-items: stretch;
@@ -173,7 +183,17 @@ button:active {
 	display: inline-flex;
 	flex-direction: row;
 	align-items: center;
-	background-color: #CCCCCC;
+	background-color: #C0C0C0;
+	float: left;
+	color: white;
+	padding: 4px;
+}
+
+.editbar-up-left {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	background-color: #DDDDDD;
 	float: left;
 	color: white;
 	padding: 4px;
